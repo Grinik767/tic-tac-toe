@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let dim = 0;
 
 function createMatrix(dimension) {
     let result = [];
@@ -15,6 +16,15 @@ function createMatrix(dimension) {
     return result;
 }
 
+function askForDimension(){
+    let result = Number(prompt("Введите размер поля:"));
+    if (isNaN(result) || result < 1){
+        result = askForDimension();
+    }
+
+    return result;
+}
+
 
 const container = document.getElementById('fieldWrapper');
 
@@ -22,7 +32,8 @@ startGame();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    dim = askForDimension();
+    renderGrid(dim);
 }
 
 function renderGrid(dimension) {
@@ -40,7 +51,7 @@ function renderGrid(dimension) {
     }
 }
 
-let data = createMatrix(3);
+let data = createMatrix(dim);
 let cur = CROSS;
 let countMoves = 0;
 let isHaveWinner = false;
