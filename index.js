@@ -3,12 +3,12 @@ const ZERO = 'O';
 const EMPTY = ' ';
 let dim = 0;
 
-function createMatrix(dimension) {
+function createMatrix() {
     let result = [];
 
-    for (let i = 0; i < dimension; i++) {
+    for (let i = 0; i < dim; i++) {
         result.push([]);
-        for (let j = 0; j < dimension; j++) {
+        for (let j = 0; j < dim; j++) {
             result[i].push(EMPTY);
         }
     }
@@ -18,7 +18,7 @@ function createMatrix(dimension) {
 
 function askForDimension(){
     let result = Number(prompt("Введите размер поля:"));
-    if (isNaN(result) || result < 1){
+    if (isNaN(result) || result < 3){
         result = askForDimension();
     }
 
@@ -28,11 +28,14 @@ function askForDimension(){
 
 const container = document.getElementById('fieldWrapper');
 
+let data = null;
+
 startGame();
 addResetListener();
 
 function startGame() {
     dim = askForDimension();
+    data = createMatrix();
     renderGrid(dim);
 }
 
@@ -51,7 +54,6 @@ function renderGrid(dimension) {
     }
 }
 
-let data = createMatrix(dim);
 let cur = CROSS;
 let countMoves = 0;
 let isHaveWinner = false;
@@ -103,7 +105,6 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    data = createMatrix(3);
     isHaveWinner = false;
     countMoves = 0;
     cur = CROSS;
@@ -111,22 +112,20 @@ function resetClickHandler() {
 }
 
 function getWinner() {
-    const dimension = data.length;
-
-    for (let i = 0; i < dimension; i++) {
+    for (let i = 0; i < dim; i++) {
         if (data[i][0] !== EMPTY && data[i].every(cell => cell === data[i][0])) {
-            return {winner: data[i][0], combination: Array.from({length: dimension}, (_, j) => [i, j])};
+            return {winner: data[i][0], combination: Array.from({length: dim}, (_, j) => [i, j])};
         }
         if (data[0][i] !== EMPTY && data.every(row => row[i] === data[0][i])) {
-            return {winner: data[0][i], combination: Array.from({length: dimension}, (_, j) => [j, i])};
+            return {winner: data[0][i], combination: Array.from({length: dim}, (_, j) => [j, i])};
         }
     }
 
     if (data[0][0] !== EMPTY && data.every((row, index) => row[index] === data[0][0])) {
-        return {winner: data[0][0], combination: Array.from({length: dimension}, (_, i) => [i, i])};
+        return {winner: data[0][0], combination: Array.from({length: dim}, (_, i) => [i, i])};
     }
-    if (data[0][dimension - 1] !== EMPTY && data.every((row, index) => row[dimension - 1 - index] === data[0][dimension - 1])) {
-        return {winner: data[0][dimension - 1], combination: Array.from({length: dimension}, (_, i) => [i, dimension - 1 - i])};
+    if (data[0][dim - 1] !== EMPTY && data.every((row, index) => row[dim - 1 - index] === data[0][dim - 1])) {
+        return {winner: data[0][dim - 1], combination: Array.from({length: dim}, (_, i) => [i, dim - 1 - i])};
     }
 
     return null;
