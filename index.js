@@ -66,7 +66,8 @@ function cellClickHandler(row, col) {
     if (countMoves === (data.length * data.length) && winner === null) {
         alert("Победила дружба");
     } else if (winner != null) {
-        alert(`Победил ${winner}`);
+        alert(`Победил ${winner.winner}`);
+        colorCells(winner.combination, winner.winner)
         isHaveWinner = true;
     }
 
@@ -99,27 +100,33 @@ function resetClickHandler() {
 }
 
 function getWinner() {
-    let dimension = data.length;
+    const dimension = data.length;
 
     for (let i = 0; i < dimension; i++) {
         if (data[i][0] !== EMPTY && data[i].every(cell => cell === data[i][0])) {
-            return data[i][0];
+            return {winner: data[i][0], combination: Array.from({length: dimension}, (_, j) => [i, j])};
         }
         if (data[0][i] !== EMPTY && data.every(row => row[i] === data[0][i])) {
-            return data[0][i];
+            return {winner: data[0][i], combination: Array.from({length: dimension}, (_, j) => [j, i])};
         }
     }
 
     if (data[0][0] !== EMPTY && data.every((row, index) => row[index] === data[0][0])) {
-        return data[0][0];
+        return {winner: data[0][0], combination: Array.from({length: dimension}, (_, i) => [i, i])};
     }
     if (data[0][dimension - 1] !== EMPTY && data.every((row, index) => row[dimension - 1 - index] === data[0][dimension - 1])) {
-        return data[0][dimension - 1];
+        return {winner: data[0][dimension - 1], combination: Array.from({length: dimension}, (_, i) => [i, dimension - 1 - i])};
     }
 
     return null;
 }
 
+
+function colorCells(cells, symbol){
+    for (const cell of cells){
+        renderSymbolInCell(symbol, cell[0], cell[1], 'red')
+    }
+}
 
 /* Test Function */
 
